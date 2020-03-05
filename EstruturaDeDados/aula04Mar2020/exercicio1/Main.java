@@ -1,6 +1,7 @@
 package exercicio1;
 
 import java.util.Scanner;
+import exercicio1.*;
 
 public class Main {
 
