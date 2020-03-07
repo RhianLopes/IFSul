@@ -1,5 +1,8 @@
 package exercicio1;
 
+/*
+ * @author: rhian.costa
+ */
 public class Rectangle {
 	
 	private Double width;

@@ -3,6 +3,9 @@ package exercicio1;
 import java.util.Scanner;
 import exercicio1.*;
 
+/*
+ * @author: rhian.costa
+ */
 public class Main {
 
 	public static void main(String[] args) {
@@ -11,7 +14,10 @@ public class Main {
 		final Scanner scanner = new Scanner(System.in);
 		
 		// Reading variables
+		System.out.println("Widht: ");
 		final Double width = scanner.nextDouble();
+		
+		System.out.println("Height: ");
 		final Double height = scanner.nextDouble();
 		
 		// Create the Object Rectangle
