@@ -289,9 +289,3 @@ where v.faixacomissao = 'A'
 group by v.codvendedor
 order by total;
 
-    
-
-
-
-
-
