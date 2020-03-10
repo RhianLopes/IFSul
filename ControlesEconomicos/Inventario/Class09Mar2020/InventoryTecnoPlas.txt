@@ -1,0 +1,38 @@
+Exercicio Proposto n®. 1.1
+
+A empresa TecnoPlas Ltda, desenvolve produtos derivado de plastico para os mais diversos setores
+da economia. Comercializa embalagens plasticas de alimentos, como potes e saquinho Zip Lock, de diversos
+formatos e tamanhos, visando atender a maioria das necessidades dos seus clientes
+No dia 31.12.%1, nova diretoria administrativa assumiu a empresa e para identificar a real situagao
+da empresa realizou um levantamento dos bens direitos, dividas e obrigagées da empresa, conforme abaixo
+relacionado
+Descricao Valor
+- Terreno medindo 12 x 30m? —lote 6, quadra 3, registradon®2" Cartério, sob no. 173 240.000,00
+- Dinheiro existente em caixa 5.550,00
+~ 20.000 saquinhos Zip Lock 7 x 5, prego unitario de RS 0,25 cada 5.000,00
+Divida por compra a prazo de mercadorias de LHD Ltda, dupl. 7452, veto. 08.02.x2 10.333,00
+Prédio de alvenaria, construido sob lote descrito acima, medindo 8 x 12 € com
+registro no Registro de Iméveis, sob n° 184 420.600,00
+Valor ar ber de MCC S.A, dupl 012, veto. 06.02.x2 61.850,00
+01 Escrivaninha, modelo Kade, n° 2, para uso proprio 850,00
+O4 Cadi marca Deca, n°. 3,4 ,5, 6, para uso préprio, no valor de R$80,00 cada 320,00
+14.000 saquinhos Z1p Lock 10 x 15, prego unitario de RS 0,34 cada 4. 760,00
+Valor a receber de BJF Ltda, dupl 013, veto, 30.01.x2 1.850,00
+Divida a pagar ao Banco do Brasil S/A, nota promisséria XN445, veto. 15.03.x2 11.000,00
+Divida por compra a prazo de mercadorias de PlasCom Ltda, dupl. 765, veto. 22.670,00
+08.01.x2
+- 02 Computador, marca SRT, 1P.1 € 10, para uso proprio 6.900,00
+~ 6.000 potes retangular com tampa 500ml, preco unitario R$ 1,50 cada 9.000,00
+- Divida a pagar a Caixa Econémica Federal, nota promisséria TC-846, veto. 15.04 33.200,00
+- Valor areceber de JHS Ltda, dupl. 014, veto. 12.01.x2 32.230,00
+- Divida por compra a prazo de mercadorias de Lins S.A., dup! 9876, veto. 12.01.x2 13.200,00
+- 4.500 potes redondo com tampa 250ml, preco unitario RS 0.80 cada 3.600,00
+- Valor a receber de LATAN S.A., dupl. 015, veto. 23.01 12.475,00
+- Divida por compra a prazo de mercadorias de PPR Ltda. dupl. 1265, veto. 14.01.x2 16.145,00
+- 03 Maquinas para producao, marca BrasilP! 7, 8, 9, para uso proprio 35.000,00
+
+Pede-se’
+1) Elabore o Inventario Geral Inicial — n°. 1
+
+Demonstre o CAPITAL PROPRIO/PATRIMONIO LIQUIDO - (I1-Comparacao)
+
