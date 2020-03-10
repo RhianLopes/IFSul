@@ -236,13 +236,12 @@ order by total desc, year desc;
 
 -- 17 Liste o nome dos clientes e o total de pedidos de cada cliente, em ordem crescente
 -- de pedidos. Os clientes sem pedidos também devem ser listados.
--- *** verificar resultado de 1576 da lista de respostas para 1575
 
 select
 	c.nome,
-    coalesce(sum(p.codpedido), 0) as total
+    count(p.codpedido) as total
 from cliente c 
-inner join pedido p 
+left join pedido p 
 	on c.codcliente = p.codcliente
 group by c.codcliente
 order by total, c.nome;
