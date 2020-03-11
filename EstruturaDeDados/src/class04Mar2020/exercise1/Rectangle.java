@@ -1,4 +1,4 @@
-package exercicio1;
+package class04Mar2020.exercise1;
 
 /*
  * @author: rhian.costa

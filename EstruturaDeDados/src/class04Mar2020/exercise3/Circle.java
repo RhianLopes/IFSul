@@ -1,10 +1,10 @@
-package exercicio3;
+package class04Mar2020.exercise3;
 
 /*
  * @author: rhian.costa
  */
 public class Circle {
-
+	
 	private Double radius;
 	
 	public Circle(Double radius) {

@@ -1,4 +1,4 @@
-package exercicio2;
+package class04Mar2020.exercise2;
 
 import java.util.Scanner;
 
@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-
+		
 		final Scanner scanner = new Scanner(System.in);
 		
 		// Reading variables
@@ -29,6 +29,7 @@ public class Main {
 		
 		// Write the values
 		System.out.println(student.getAnualMessageGrade());
+
 	}
 
 }

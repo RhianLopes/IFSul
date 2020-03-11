@@ -1,7 +1,6 @@
-package exercicio1;
+package class04Mar2020.exercise1;
 
 import java.util.Scanner;
-import exercicio1.*;
 
 /*
  * @author: rhian.costa
@@ -28,4 +27,5 @@ public class Main {
 		System.out.println("PERIMETER: " + rectangle.perimeter());
 		System.out.println("DIAGONAL: " + rectangle.diagonal());
 	}
+
 }

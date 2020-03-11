@@ -1,4 +1,4 @@
-package exercicio3;
+package class04Mar2020.exercise3;
 
 import java.util.Scanner;
 

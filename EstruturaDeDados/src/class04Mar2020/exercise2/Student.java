@@ -1,10 +1,10 @@
-package exercicio2;
+package class04Mar2020.exercise2;
 
 /*
  * @author: rhian.costa
  */
 public class Student {
-	
+
 	private static final Double MINIMUM_ANUAL_GRADE = 6.0;
 
 	private String name;
