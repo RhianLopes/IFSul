@@ -14,17 +14,26 @@ public class Main {
 		System.out.println("How many rooms you need? ");
 		int quantityStudents = scanner.nextInt();
 		
-		if (quantityStudents >= 0 && quantityStudents <= 9) {
+		while (quantityStudents <= 0 || quantityStudents > 9) {
+			System.out.println("Invalid number, try another");
+			quantityStudents = scanner.nextInt();
+		}
 			
-			final Student[] rooms = new Student[10];
+		final Student[] rooms = new Student[10];
+		
+		while(quantityStudents != 0) {
 			
-			while(quantityStudents != 0) {
-				
-				System.out.println("What your name? ");
-				final String name = scanner.next();
-				
-				System.out.println("What your e-mail? ");
-				final String email = scanner.next();
+			System.out.println("What your name? ");
+			final String name = scanner.next();
+			
+			System.out.println("What your e-mail? ");
+			final String email = scanner.next();
+			
+			final Student student = new Student(name, email);
+			
+			boolean busy = false;
+			
+			while (!busy) {
 				
 				System.out.println("What room you want? ");
 				int roomNumber = scanner.nextInt();
@@ -35,12 +44,24 @@ public class Main {
 					roomNumber = scanner.nextInt();
 				}
 				
-				quantityStudents--;
+				if (rooms[roomNumber] == null) {
+					rooms[roomNumber] = student;
+					busy = true;
+				} else {
+					System.out.println("Your room is busy. Try another");
+				}
 			}
 			
-		} else {
-			
-			System.out.println("Oh no!");
-		}	
+			quantityStudents--;
+		}
+		
+		int count = 0;
+		
+		for (int i = 0; i < rooms.length; i++) {
+			if (rooms[i] instanceof Student) {
+				count++;
+				rooms[i].print(count, i);
+			}
+		}
 	}
 }

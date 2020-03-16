@@ -14,6 +14,14 @@ public class Student {
 		this.name = name;
 		this.email = email;
 	}
+	
+	public void print(int rent, int roomNumber) {
+		System.out.println("");
+		System.out.println("Rent #" + rent + ":");
+		System.out.println("Name: " + name);
+		System.out.println("Email: " + email);
+		System.out.println("Room: " + roomNumber);
+	}
 
 	public String getName() {
 		return name;
