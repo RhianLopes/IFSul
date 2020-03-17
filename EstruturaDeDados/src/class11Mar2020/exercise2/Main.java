@@ -22,12 +22,12 @@ public class Main {
 		final Student[] rooms = new Student[10];
 		
 		while(quantityStudents != 0) {
-			
+			scanner.nextLine();
 			System.out.println("What your name? ");
-			final String name = scanner.next();
+			final String name = scanner.nextLine();
 			
 			System.out.println("What your e-mail? ");
-			final String email = scanner.next();
+			final String email = scanner.nextLine();
 			
 			final Student student = new Student(name, email);
 			
