@@ -15,7 +15,7 @@ public class Main {
 		int quantityStudents = scanner.nextInt();
 		
 		while (quantityStudents <= 0 || quantityStudents > 9) {
-			System.out.println("Invalid number, try another");
+			System.out.println("Invalid number, try another ");
 			quantityStudents = scanner.nextInt();
 		}
 			
@@ -37,7 +37,7 @@ public class Main {
 			
 			while (!busy) {
 				
-				System.out.println("What room you want? ");
+				System.out.println("Which room you want? (0 TO 9)");
 				int roomNumber = scanner.nextInt();
 				
 				while (roomNumber > 9 || roomNumber < 0) {
