@@ -31,6 +31,8 @@ public class Main {
 			
 			final Student student = new Student(name, email);
 			
+			int count = 0;
+			
 			boolean busy = false;
 			
 			while (!busy) {
@@ -46,6 +48,8 @@ public class Main {
 				
 				if (rooms[roomNumber] == null) {
 					rooms[roomNumber] = student;
+					count++;
+					student.print(count, roomNumber);
 					busy = true;
 				} else {
 					System.out.println("Your room is busy. Try another");
@@ -55,12 +59,11 @@ public class Main {
 			quantityStudents--;
 		}
 		
-		int count = 0;
-		
+		System.out.println("");
+		System.out.println("Busy Rooms: ");
 		for (int i = 0; i < rooms.length; i++) {
 			if (rooms[i] instanceof Student) {
-				count++;
-				rooms[i].print(count, i);
+				rooms[i].print(i);
 			}
 		}
 	}

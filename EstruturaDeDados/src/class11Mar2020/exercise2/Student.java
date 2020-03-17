@@ -22,6 +22,10 @@ public class Student {
 		System.out.println("Email: " + email);
 		System.out.println("Room: " + roomNumber);
 	}
+	
+	public void print(int roomNumber) {
+		System.out.println(roomNumber + ": " + name + ", " + email);
+	}
 
 	public String getName() {
 		return name;
