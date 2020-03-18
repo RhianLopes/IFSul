@@ -21,14 +21,10 @@ public class Main {
 			int x = random.nextInt(4);
 			int y = random.nextInt(4);
 			
-			for (int t = 0; t <= 3; t++) {
-				for (int u = 0; u <= 3; u++) {
-					if (sea[t][u] == 1 && t == x && u == y) {
-						c--;
-					} else if (t == x && u == y) {
-						sea[t][u] = 1;
-					}
-				}
+			if (sea[x][y] == 1) {
+				c--;
+			} else {
+				sea[x][y] = 1;
 			}
 		}
 		
