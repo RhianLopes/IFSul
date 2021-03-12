@@ -268,8 +268,6 @@ SELECT
 FROM produto pr
 LEFT JOIN itempedido ip
 	ON ip.codproduto = pr.codproduto
-LEFT JOIN pedido p
-	ON p.codpedido = ip.codpedido
 GROUP BY pr.codproduto
 ORDER BY total DESC;
 
