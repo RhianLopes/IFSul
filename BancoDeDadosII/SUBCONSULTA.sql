@@ -250,6 +250,191 @@ INNER JOIN (SELECT
 ON c.CodCliente = p.CodCliente
 ORDER BY c.Nome, p.CodPedido;
 
+-- L2 EX2 Crie uma consulta que exiba o nome do cliente, endereço, cidade, UF, CEP,
+-- código do pedido e prazo de entrega dos pedidos que NÃO sejam de vendedores que
+-- ganham menos de R$ 1500,00. Linhas: 5109
+
+SELECT 
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Uf,
+	c.Cep,
+	p.CodPedido,
+	p.PrazoEntrega 
+FROM cliente c 
+INNER JOIN pedido p 
+ON c.CodCliente = p.CodCliente 
+WHERE p.CodVendedor IN (SELECT 
+		v.CodVendedor 
+	FROM vendedor v 
+	WHERE v.SalarioFixo >= 1500);
+
+-- L2 EX3 Crie uma consulta que exiba o nome do cliente, cidade e estado, dos clientes 
+-- que fizeram algum pedido no ano de 2015. Ordene os resultados pelos nomes dos clientes
+-- em ordem alfabética. Linhas: 1291
+
+SELECT 
+	c.Nome,
+	c.Cidade,
+	c.Uf 
+FROM cliente c 
+WHERE c.CodCliente IN (SELECT 
+		p.CodCliente 
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = 2015
+	GROUP BY p.CodCliente)
+ORDER BY c.Nome;
+
+-- L2 EX4 Crie uma consulta que exiba o código do pedido e o somatório da quantidade de
+-- itens desse pedido. Devem ser exibidos somente os pedidos em que o somatório das 
+-- quantidades de itens de um pedido seja maior que a média da quantidade de itens 
+-- de todos os pedidos. Linhas: 2508
+
+SELECT 
+	p.CodPedido,
+	p.Soma
+FROM (SELECT 
+		ip.CodPedido,
+		COALESCE(SUM(ip.Quantidade), 0) AS Soma
+	 FROM itempedido ip 
+	 GROUP BY ip.CodPedido) AS p
+WHERE p.Soma > (
+	SELECT 
+		AVG(p.Soma) AS MediaQuantidade
+	FROM 
+	(SELECT 
+		COALESCE(SUM(ip.Quantidade), 0) AS Soma
+	 FROM itempedido ip 
+	 GROUP BY ip.CodPedido) AS p
+)
+GROUP BY p.CodPedido;
+
+-- L2 EX5 Anulada.
+
+-- L2 EX6* Crie uma consulta que exiba o nome do cliente, o nome do vendedor de seu
+-- primeiro pedido e o estado do cliente. Devem ser exibidos apenas os clientes de 
+-- Santa Cataria e apenas o primeiro vendedor. Linhas: 55 
+
+SELECT 
+	c.Nome as NomeCliente,
+	vp.Nome as NomeVendedor,
+	c.Uf
+FROM cliente c 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		v.Nome
+	FROM pedido p 
+	INNER JOIN vendedor v 
+	ON p.CodVendedor = v.CodVendedor
+	GROUP BY p.CodPedido
+	ORDER BY p.DataPedido DESC) as vp
+ON c.CodCliente = vp.CodCliente
+WHERE c.Uf = 'SC'
+GROUP BY c.CodCliente
+ORDER BY NomeCliente;
+
+-- L2 EX7 Selecione o nome do produto e o valor unitário dos produtos que possuem o 
+-- valor unitário maior que todos os produtos que comecem com a letra L. A lista deve
+-- ser ordenada em ordem alfabética. Linhas: 192
+
+SELECT 
+	p.Descricao,
+	p.ValorUnitario 
+FROM produto p 
+WHERE p.ValorUnitario > (SELECT 
+		MAX(p.ValorUnitario)
+	FROM produto p
+	WHERE SUBSTRING(p.Descricao, 1, 1) = 'L' )
+	GROUP BY p.CodProduto
+ORDER BY p.Descricao;
+
+-- L2 EX8 Selecione o código do produto, o nome do produto e o valor unitário dos produtos
+-- que possuam pelo menos um pedido com mais de 9 itens em sua quantidade. A lista deve ser
+-- ordenada pelo valor unitário em ordem decrescente. Linhas: 3063
+
+SELECT 
+	pr.*
+FROM produto pr
+INNER JOIN (
+	SELECT 
+		ip.CodProduto,
+		COALESCE(MAX(ip.Quantidade), 0) as QuantidadeMaxima
+	FROM itempedido ip
+	GROUP BY ip.CodProduto) AS p
+ON pr.CodProduto = p.CodProduto
+WHERE p.QuantidadeMaxima > 9
+ORDER BY pr.ValorUnitario DESC;
+
+-- L2 EX9 Selecione o código do vendedor e o nome dos vendedores que não tenham vendido nenhum
+-- pedido com prazo de entrega em Agosto de 2015. A lista deve ser ordenada pelo nome dos vendedores
+-- em ordem alfabética. Linhas: 101
+
+SELECT 
+	v.CodVendedor,
+	v.Nome
+FROM vendedor v 
+WHERE v.CodVendedor NOT IN (SELECT 
+		DISTINCT p.CodVendedor 
+	FROM pedido p
+	WHERE YEAR(p.PrazoEntrega) = 2015 
+	AND MONTH(p.PrazoEntrega) = 8)
+ORDER BY v.Nome;
+
+-- L2 EX10 Selecione o código do cliente e o nome dos clientes que tenham feitos pedidos
+-- em Abril de 2014. A lista deve ser ordenada pelo nome dos clientes em ordem alfabética. 
+-- Linhas: 208
+
+SELECT 
+	c.CodCliente,
+	c.Nome
+FROM cliente c 
+WHERE c.CodCliente IN (SELECT 
+		DISTINCT p.CodCliente
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = 2014
+	AND MONTH(p.DataPedido) = 4)
+ORDER BY c.Nome;
+
+-- L3 EX1 Exiba o nome, endereço, cidade e o CEP dos clientes que moram em Santa Catarina 
+-- e que tenham pelo menos um pedido feito onde o prazo de entrega é entre 16 e 20 dias. Linhas: 59
+
+SELECT 
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Cep
+FROM cliente c
+WHERE c.CodCliente IN (SELECT 
+		DISTINCT p.CodCliente 
+	FROM pedido p
+	WHERE DATEDIFF(p.PrazoEntrega, p.DataPedido) >= 16
+	AND DATEDIFF(p.PrazoEntrega, p.DataPedido) <= 20)
+AND c.Uf = 'SC';
+
+-- L3 EX2 Exiba o nome, endereço, cidade e o CEP dos clientes que moram no Rio Grande do Sul e
+-- tenham pedidos realizados por algum vendedor que tenha o nome iniciando com a letra A. 
+-- Além disso deve ser exibido apenas os clientes que tiveram pedidos no ano de 2015. 
+-- A lista deve estar ordenada em ordem alfabética e sem clientes repetidos. Linhas: 9
+
+SELECT 
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Cep
+FROM cliente c
+WHERE c.CodCliente IN (SELECT 
+		DISTINCT p.CodCliente
+	FROM pedido p
+	INNER JOIN vendedor v 
+	ON p.CodVendedor = v.CodVendedor 
+	WHERE YEAR(p.DataPedido) = 2015
+	AND SUBSTRING(v.Nome, 1, 1) = 'A')
+AND c.Uf = 'RS'
+ORDER BY c.Nome;
+
+
 
 
 
