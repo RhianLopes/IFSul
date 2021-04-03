@@ -215,6 +215,22 @@ WHERE v.CodVendedor NOT IN (SELECT
 	AND MONTH(p.PrazoEntrega) = 8)
 ORDER BY v.Nome;
 
+-- L1 EX14 Selecione o código do cliente e o nome dos clientes que tenham feitos pedidos
+-- em Abril de 2014. A lista deve ser ordenada pelo nome dos clientes em ordem alfabética.
+-- Linhas:  208
+
+SELECT 
+	c.CodCliente,
+	c.Nome
+FROM cliente c 
+WHERE c.CodCliente IN (SELECT 
+		DISTINCT p.CodCliente
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = 2014
+	AND MONTH(p.DataPedido) = 4)
+ORDER BY c.Nome;	
+
+
 
 
 
