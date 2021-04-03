@@ -105,6 +105,22 @@ WHERE p.CodVendedor IN (SELECT
 	FROM vendedor v 
 	WHERE v.SalarioFixo >= 1500);
 
+-- L1 EX8 Crie uma consulta que exiba o nome do cliente, cidade e estado, dos clientes
+-- que fizeram algum pedido no ano de 2015. Ordene os resultados pelos nomes dos clientes
+-- em ordem alfabética. Linhas: 1291
+
+SELECT 
+	c.Nome,
+	c.Cidade,
+	c.Uf 
+FROM cliente c 
+WHERE c.CodCliente IN (SELECT 
+		p.CodCliente 
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = 2015
+	GROUP BY p.CodCliente)
+ORDER BY c.Nome;
+
 -- L1 EX9 Crie uma consulta que exiba o código do pedido e o somatório da quantidade
 -- de itens desse pedido. Devem ser exibidos somente os pedidos em que o somatório
 -- das quantidades de itens de um pedido seja maior que a média da quantidade de
@@ -129,6 +145,43 @@ WHERE p.Soma > (
 )
 GROUP BY p.CodPedido;
 
+-- L1 EX10 Crie uma consulta que exiba o nome do cliente, o nome do vendedor de
+-- seu último pedido e o estado do cliente. Devem ser exibidos apenas os clientes 
+-- do Rio Grande do Sul e apenas o último vendedor. Linhas: 55
+
+SELECT 
+	c.Nome as NomeCliente,
+	vp.Nome as NomeVendedor,
+	c.Uf
+FROM cliente c 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		v.Nome
+	FROM pedido p 
+	INNER JOIN vendedor v 
+	ON p.CodVendedor = v.CodVendedor
+	GROUP BY p.CodPedido
+	ORDER BY p.DataPedido DESC) as vp
+ON c.CodCliente = vp.CodCliente
+WHERE c.Uf = 'RS'
+GROUP BY c.CodCliente
+ORDER BY NomeCliente;
+
+-- L1 EX11 Selecione o nome do produto e o valor unitário dos produtos que possuem
+-- o valor unitário maior que todos os produtos que comecem com a letra L. A lista
+-- deve ser ordenada em ordem alfabética. Linhas: 192
+
+SELECT 
+	p.Descricao,
+	p.ValorUnitario 
+FROM produto p 
+WHERE p.ValorUnitario > (SELECT 
+		MAX(p.ValorUnitario)
+	FROM produto p
+	WHERE SUBSTRING(p.Descricao, 1, 1) = 'L' )
+	GROUP BY p.CodProduto
+ORDER BY p.Descricao;
 
 -- L1 EX12 Selecione o código do produto, o nome do produto e o valor unitário dos
 -- produtos que possuam pelo menos um pedido com mais de 9 itens em sua quantidade.
@@ -147,6 +200,20 @@ ON pr.CodProduto = p.CodProduto
 WHERE p.QuantidadeMaxima > 9
 ORDER BY pr.ValorUnitario DESC;
 
+-- L1 EX13 Selecione o código do vendedor e o nome dos vendedores que não tenham
+-- vendido nenhum pedido com prazo de entrega em Agosto de 2015. A lista deve ser ordenada
+-- pelo nome dos vendedores em ordem alfabética. Linhas: 101
+
+SELECT 
+	v.CodVendedor,
+	v.Nome
+FROM vendedor v 
+WHERE v.CodVendedor NOT IN (SELECT 
+		DISTINCT p.CodVendedor 
+	FROM pedido p
+	WHERE YEAR(p.PrazoEntrega) = 2015 
+	AND MONTH(p.PrazoEntrega) = 8)
+ORDER BY v.Nome;
 
 
 
