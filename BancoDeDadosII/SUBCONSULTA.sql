@@ -434,6 +434,31 @@ WHERE c.CodCliente IN (SELECT
 AND c.Uf = 'RS'
 ORDER BY c.Nome;
 
+-- L3 EX3 Exiba o nome, salário e a faixa de comissão dos vendedores que recebem mais
+-- que R$ 1800,00 que tenham realizado algum pedido em Dezembro de 2014 para clientes
+-- que moram ou em Santa Catarina ou no Rio Grande do Sul. (2 sub-consultas). Linhas: 7
+
+SELECT 
+	v.Nome,
+	v.SalarioFixo,
+	v.FaixaComissao
+FROM vendedor v 
+WHERE v.CodVendedor IN (
+	SELECT 
+		DISTINCT p.CodVendedor 
+	FROM pedido p 
+	WHERE p.CodCliente IN (SELECT 
+			c.CodCliente
+		FROM cliente c  
+		WHERE c.Uf IN ('SC', 'RS'))
+	AND YEAR(p.DataPedido) = 2014
+	AND MONTH(p.DataPedido) = 12)
+AND v.FaixaComissao IN ('B', 'A');
+
+
+
+
+
 
 
 
