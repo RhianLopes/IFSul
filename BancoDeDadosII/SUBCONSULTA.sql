@@ -230,6 +230,25 @@ WHERE c.CodCliente IN (SELECT
 	AND MONTH(p.DataPedido) = 4)
 ORDER BY c.Nome;	
 
+-- L2 EX1 Crie uma consulta que exiba o código do cliente, o nome do cliente e o número
+-- dos seus pedidos ordenados pelo nome e posteriormente pelo código do pedido. Somente
+-- devem ser exibidos os pedidos dos vendedores que possuem a faixa de comissão “A”. 
+-- Linhas: 1749
+
+SELECT 
+	c.CodCliente,
+	c.Nome,
+	p.CodPedido
+FROM cliente c
+INNER JOIN (SELECT
+		p.CodPedido,
+		p.CodCliente 
+	FROM pedido p
+	INNER JOIN vendedor v 
+	ON p.CodVendedor = v.CodVendedor
+	WHERE v.FaixaComissao = 'A') AS p
+ON c.CodCliente = p.CodCliente
+ORDER BY c.Nome, p.CodPedido;
 
 
 
