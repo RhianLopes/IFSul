@@ -455,6 +455,123 @@ WHERE v.CodVendedor IN (
 	AND MONTH(p.DataPedido) = 12)
 AND v.FaixaComissao IN ('B', 'A');
 
+-- L3 EX4 Exiba um ranking contendo o nome e o total de vendas efetuadas por vendedor
+-- durante o ano de 2015. Note que não devem aparecer vendedores que efetuaram nenhuma 
+-- venda no ano. Linhas: 244
+
+SELECT 
+	v.Nome,
+	p.Total
+FROM vendedor v 
+INNER JOIN (SELECT
+		COUNT(*) AS Total,
+		p.CodVendedor
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = 2015
+	GROUP BY p.CodVendedor) AS p
+ON v.CodVendedor = p.CodVendedor
+ORDER BY p.Total DESC;
+
+-- L3 EX5 Anulado.
+
+-- L3 EX6 Exiba o nome e a comissão dos vendedores. A consulta externa deverá ser na tabela
+-- vendedor e existem duas sub-consultas (uma dentro da outra). A lista deve ser ordenada pelo
+-- valor das comissões. Além disso, as comissões devem ter o valor exibido arredondado
+-- (2 números depois da vírgula), a comissão para todos os vendedores é 10% do total vendido.
+-- Linhas: 246
+
+SELECT 
+	v.Nome,
+	COALESCE(p.Total, ROUND(0.00, 2)) AS comissao_dos_vendedores
+FROM vendedor v 
+LEFT JOIN (SELECT 
+		p.CodVendedor,
+		ROUND(SUM(COALESCE(((pr.ValorUnitario * ip.Quantidade) * 0.1), 0.00)), 2) as Total
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	GROUP BY p.CodVendedor) as p
+ON v.CodVendedor = p.CodVendedor
+ORDER BY comissao_dos_vendedores ASC;
+
+-- L3 EX7 Exiba um ranking com o nome do cliente e o total comprado por este cliente no ano
+-- de 2015. Os clientes que devem integrar o ranking devem morar no Rio Grande do Sul ou
+-- em Santa Catarina. Além disso, o total devem ter o valor exibido arredondado (2 números 
+-- depois da vírgula). A consulta externa é em cliente. Linhas: 117
+
+SELECT 
+	c.Nome,
+	COALESCE(p.Total, ROUND(0.00, 2)) AS total_comprado
+FROM cliente c 
+LEFT JOIN (SELECT 
+		p.CodCliente,
+		ROUND(SUM(COALESCE((pr.ValorUnitario * ip.Quantidade), 0.00)), 2) as Total
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	WHERE YEAR(p.DataPedido) = 2015
+	GROUP BY p.CodCliente) as p
+ON c.CodCliente = p.CodCliente
+WHERE c.Uf IN ('SC', 'RS');
+
+-- L3 EX8 Exiba um ranking com o nome do vendedor e o total vendido por ele no ano de 2014.
+-- Além disso, o total devem ter o valor exibido arredondado (2 números depois da vírgula).
+-- A consulta externa é em vendedor. Linhas: 246
+
+SELECT 
+	v.Nome,
+	COALESCE(p.Total, 0)
+FROM vendedor v 
+LEFT JOIN (SELECT 
+		p.CodVendedor,
+		ROUND(SUM(pr.ValorUnitario * ip.Quantidade), 2) as Total
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	WHERE YEAR(p.DataPedido) = 2014
+	GROUP BY p.CodVendedor) AS p 
+ON v.CodVendedor = p.CodVendedor
+ORDER BY v.Nome;
+
+-- L3 EX9 Exiba o código do produto, nome e a quantidade vendida dos produtos que tiveram 
+-- pedidos entre os dias 12/08/2014 e 27/10/2014. Os resultados devem ser ordenados pela 
+-- quantidade e a consulta externa é na tabela produto. Linhas: 770
+
+SELECT 
+	pr.CodProduto,
+	pr.Descricao,
+	p.Total
+FROM produto pr
+INNER JOIN (SELECT
+		ip.CodProduto,
+		SUM(ip.Quantidade) AS Total
+	FROM itempedido ip 
+	INNER JOIN pedido p 
+	ON ip.CodPedido = p.CodPedido
+	WHERE (p.DataPedido BETWEEN '2014-08-12' AND '2014-10-27')
+	GROUP BY ip.CodProduto) AS p
+ON pr.CodProduto = p.CodProduto
+ORDER BY p.Total DESC;
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
