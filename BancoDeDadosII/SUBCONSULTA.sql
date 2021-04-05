@@ -559,17 +559,66 @@ INNER JOIN (SELECT
 ON pr.CodProduto = p.CodProduto
 ORDER BY p.Total DESC;
 	
+-- L3 EX10 Crie uma consulta que retorne o nome do cliente e o total comprado por este
+-- no ano de 2014 e no ano de 2015. A consulta também deve retornar o saldo da diferença
+-- entre o total comprado no ano de 2015 e o total de 2014, ordenada por este saldo. 
+-- Não preocupe-se com os saldos que por eventualidade possuam o valor null. 
+-- DICA: a sub-consulta será no lugar de uma tabela, ademais podem haver várias sub-consultas 
+-- para as colunas desta tabela. Linhas: 1576
 
+SELECT 
+	c.Nome,
+	COALESCE(p2.Total, 0) AS t_2014,
+	COALESCE(p1.Total, 0) AS t_2015,
+	ABS(COALESCE(p1.Total, 0) - COALESCE(p2.Total, 0)) AS Diferenca
+FROM cliente c 
+LEFT JOIN (SELECT 
+		p.CodCliente,
+		COALESCE(SUM(ip.Quantidade * pr.ValorUnitario), 0) AS Total
+	FROM pedido p
+	INNER JOIN itempedido ip 
+	ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+	ON ip.CodProduto = pr.CodProduto
+	WHERE YEAR(p.DataPedido) = 2015
+	GROUP BY p.CodCliente) AS p1
+ON c.CodCliente = p1.CodCliente
+LEFT JOIN (SELECT 
+		p.CodCliente,
+		COALESCE(SUM(ip.Quantidade * pr.ValorUnitario), 0) AS Total
+	FROM pedido p
+	INNER JOIN itempedido ip 
+	ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+	ON ip.CodProduto = pr.CodProduto
+	WHERE YEAR(p.DataPedido) = 2014
+	GROUP BY p.CodCliente) AS p2
+ON c.CodCliente = p2.CodCliente
+ORDER BY Diferenca DESC;
+ 
+-- L4 EX12 Crie um ranking contendo o nome dos vendedores o valor total gasto por cada cliente na loja. 
+-- Note que o valor total não é por pedido e sim por cliente (se um cliente efetuou mais de um pedido 
+-- os valores devem ser somados). Ordene a lista pelo total gasto por cada cliente. Linhas: 6460
 
-
-
-
-
-
-
-
-
-
+SELECT 
+	v.Nome as NomeVendedor,
+	p.Nome as NomeCliente,
+	p.Total as Total
+FROM vendedor v 
+INNER JOIN (SELECT 
+		p.CodVendedor,
+		c.Nome,
+		COALESCE(SUM(ip.Quantidade * pr.ValorUnitario), 0) as Total
+	FROM cliente c
+	LEFT JOIN pedido p 
+		ON c.CodCliente = p.CodCliente
+	INNER JOIN itempedido ip
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	GROUP BY p.CodCliente, p.CodVendedor) as p
+ON p.CodVendedor = v.CodVendedor
+ORDER BY Total DESC;
 
 
 
