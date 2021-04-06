@@ -595,7 +595,170 @@ LEFT JOIN (SELECT
 	GROUP BY p.CodCliente) AS p2
 ON c.CodCliente = p2.CodCliente
 ORDER BY Diferenca DESC;
- 
+
+-- L4 EX1 Exiba o código, o nome e o valor unitário dos produtos que tiveram mais que 9 
+-- unidades vendidas em apenas um pedido (note que não é o somatório total de unidades
+-- vendidas é apenas em um único pedido). Linhas: 3063
+
+SELECT 
+	pr.CodProduto,
+	pr.Descricao,
+	pr.ValorUnitario
+FROM produto pr
+WHERE pr.CodProduto IN (SELECT
+		DISTINCT ip.CodProduto 
+	FROM itempedido ip
+	WHERE ip.Quantidade > 9
+	GROUP BY ip.CodPedido);
+
+-- L4 EX2 Exiba o código, o nome do cliente, o endereço, a cidade, o cep, o estado e a
+-- IE dos clientes que efetuaram pedidos entre 25/09/2014 e 05/10/2015. Linhas: 1312
+
+SELECT 
+	c.CodCliente,
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Cep,
+	c.Uf,
+	c.Ie
+FROM cliente c
+WHERE c.CodCliente IN (SELECT
+		DISTINCT p.CodCliente
+	FROM pedido p
+	WHERE p.DataPedido BETWEEN '2014-09-25' AND '2015-10-05')
+	
+-- L4 EX3 Exiba o código, o nome do cliente, o endereço, a cidade, o estado e a quantidade de 
+-- pedidos de todos os clientes ao longo do histórico da loja. Ordene a lista pela quantidade 
+-- de pedidos efetuados pelos clientes. Linhas: 1576
+
+SELECT
+	c.CodCliente,
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Uf,
+	COALESCE(p.Total, 0) AS Total
+FROM cliente c
+LEFT JOIN (SELECT 
+		p.CodCliente,
+		COUNT(*) AS Total
+	FROM pedido p
+	GROUP BY p.CodCliente) AS p
+ON c.CodCliente = p.CodCliente
+ORDER BY Total DESC;
+
+-- L4 EX4 Mostre o código do pedido, a data de entrega, a data do pedido, o código do cliente,
+-- o código do vendedor e a quantidade total de unidades em cada pedido. Note que não é necessário
+-- diferenciar os produtos. Ordene a lista pela quantidade total de unidades nos pedidos. Linhas: 8432
+
+SELECT 
+	p.CodPedido,
+	p.PrazoEntrega,
+	p.DataPedido,
+	p.CodCliente,
+	p.CodVendedor,
+	COALESCE(ip.Total, 0) AS Total
+FROM pedido p
+LEFT JOIN (SELECT 
+		ip.CodPedido,
+		SUM(ip.Quantidade) AS Total
+	FROM itempedido ip
+	GROUP BY ip.CodPedido) AS ip
+ON ip.CodPedido = p.CodPedido
+ORDER BY Total DESC;
+
+-- L4 EX5 Mostre todos os dados (código, descrição e valor unitário) dos produtos que nunca foram 
+-- vendidos. Ordene pela ordem alfabética da descrição dos produtos. Linhas: 356
+
+SELECT 
+	pr.*
+FROM produto pr
+WHERE pr.CodProduto NOT IN (SELECT
+		ip.CodProduto
+	FROM itempedido ip
+	GROUP BY ip.CodProduto)
+ORDER BY pr.Descricao;
+
+-- L4 EX6 Exiba o código, a descrição, o valor unitário e a quantidade de unidades vendidas de 
+-- cada produto desde que a loja abriu. Ordene pelo somatório total de unidades vendidas. Linhas: 4407
+
+SELECT 
+	pr.*,
+	COALESCE(ip.Total, 0) AS Total
+FROM produto pr
+INNER JOIN (SELECT
+		ip.CodProduto,
+		SUM(ip.Quantidade) AS Total
+	FROM itempedido ip
+	GROUP BY ip.CodProduto) AS ip
+ON ip.CodProduto = pr.CodProduto
+ORDER BY Total DESC;
+
+-- L4 EX7 Exiba o código, o nome do cliente, o endereço, a cidade, o cep, o estado e a IE dos
+-- clientes que efetuaram pedidos que contenham pelo menos um produto que custe menos de R$ 10,00. 
+-- Linhas: 32
+
+SELECT 
+	c.CodCliente,
+	c.Nome,
+	c.Endereco,
+	c.Cidade,
+	c.Cep,
+	c.Uf,
+	c.Ie
+FROM cliente c 
+WHERE c.CodCliente IN (SELECT 
+		DISTINCT p.CodCliente
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	WHERE pr.ValorUnitario < 10
+	GROUP BY p.CodPedido);
+
+-- L4 EX8 Mostre os dados (código, nome, salário e faixa de comissão) dos vendedores que venderam 
+-- algum produto que a descrição inicie com IPHONE 6 PLUS. Linhas: 22
+
+SELECT 
+	v.CodVendedor,
+	v.Nome,
+	v.SalarioFixo,
+	v.FaixaComissao 
+FROM vendedor v
+WHERE v.CodVendedor IN (SELECT 
+		DISTINCT p.CodVendedor 
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr 
+		ON ip.CodProduto = pr.CodProduto
+	WHERE pr.Descricao LIKE 'IPHONE 6 PLUS%'
+	GROUP BY p.CodPedido);
+
+-- L4 EX9 Mostre os dados (código, descrição, valor unitário) dos produtos, bem como a quantidade
+-- de pedidos que solicitaram esses produtos. Ordene a lista pela quantidade de pedidos de cada
+-- produto (do maior para o menor). Linhas: 4763
+
+SELECT 
+	pr.*,
+	COALESCE(p.Total, 0) AS Total
+FROM produto pr
+LEFT JOIN (SELECT
+		DISTINCT ip.CodProduto,
+		COUNT(*) as Total
+	FROM itempedido ip
+	GROUP BY ip.CodProduto) AS p
+ON pr.CodProduto = p.CodProduto
+ORDER BY Total DESC;
+
+-- L4 EX10 Mostre o código, prazo de entrega, data do pedido, código do cliente, do vendedor e o
+-- valor total (em reais) de todos os pedidos. Ordene a lista em ordem decrescente pelo valor total. 
+-- Linhas: 8432
+
+
+
 -- L4 EX12 Crie um ranking contendo o nome dos vendedores o valor total gasto por cada cliente na loja. 
 -- Note que o valor total não é por pedido e sim por cliente (se um cliente efetuou mais de um pedido 
 -- os valores devem ser somados). Ordene a lista pelo total gasto por cada cliente. Linhas: 6460
