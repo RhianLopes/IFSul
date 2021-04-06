@@ -872,6 +872,131 @@ LEFT JOIN (SELECT
 ON v.CodVendedor = p.CodVendedor
 ORDER BY total_vendido DESC;
 
+-- L5 EX1 Crie uma tabela temporária que contenha os dados de todos os pedidos e de seus vendedores
+-- e exiba na consulta principal o código do pedido, data de entrega e o nome do vendedor. 
+-- LINHAS = 8432.
+
+SELECT 
+	pv.CodPedido,
+	pv.PrazoEntrega,
+	pv.Nome
+FROM (SELECT
+		v.Nome,
+		v.SalarioFixo,
+		v.FaixaComissao,
+		p.*
+	FROM pedido p
+	INNER JOIN vendedor v 
+	ON p.CodVendedor = v.CodVendedor) AS pv
+ORDER BY pv.PrazoEntrega, pv.CodPedido;
+
+-- L5 EX2 Crie uma tabela temporária que contenha todos os dados das tabelas pedido e cliente,
+-- após exiba na consulta principal apenas o código do pedido, data do pedido e o nome do cliente.
+-- Por fim, ordene a lista em ordem cronológica a data do pedido. LINHAS = 8432.
+
+SELECT 
+	pc.CodPedido,
+	pc.DataPedido,
+	pc.Nome
+FROM (SELECT
+		c.*,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega
+	FROM pedido p
+	INNER JOIN cliente c 
+	ON p.CodCliente = c.CodCliente) AS pc
+ORDER BY pc.DataPedido, pc.CodPedido;
+
+-- L5 EX3 Crie uma tabela temporária que contenha todos os dados das tabelas pedido, cliente e 
+-- vendedor. Além disso, na consulta principal exiba os estados cadastrados e a quantidade 
+-- total de pedidos por estado. LINHAS = 27.
+
+SELECT 	
+	pvc.Uf,
+	COUNT(*) AS TotalPedidosEstado
+FROM (SELECT
+		c.*,
+		p.CodPedido,
+		p.DataPedido,
+		p.PrazoEntrega,
+		v.CodVendedor,
+		v.FaixaComissao,
+		v.Nome AS NomeVendedor,
+		v.SalarioFixo
+	FROM pedido p
+	INNER JOIN cliente c
+		ON p.CodCliente = c.CodCliente
+	INNER JOIN vendedor v 
+		ON p.CodVendedor = v.CodVendedor) AS pvc
+GROUP BY pvc.Uf
+ORDER BY TotalPedidosEstado DESC;
+
+-- L5 EX4 Crie uma tabela temporária que contenha todos os dados das tabelas pedido, cliente e
+-- vendedor. Exiba o ranking dos vendedores pela quantidade de pedidos e ordene em ordem decrescente.
+-- LINHAS = 244.
+
+SELECT 	
+	pvc.NomeVendedor,
+	COUNT(*) AS Quantidade
+FROM (SELECT
+		c.*,
+		p.CodPedido,
+		p.DataPedido,
+		p.PrazoEntrega,
+		v.CodVendedor,
+		v.FaixaComissao,
+		v.Nome AS NomeVendedor,
+		v.SalarioFixo
+	FROM pedido p
+	INNER JOIN cliente c
+		ON p.CodCliente = c.CodCliente
+	INNER JOIN vendedor v 
+		ON p.CodVendedor = v.CodVendedor) AS pvc
+GROUP BY pvc.CodVendedor
+ORDER BY Quantidade DESC;
+
+-- L5 EX5 Crie uma tabela temporária que contenha todos os dados das tabelas pedido, cliente e 
+-- vendedor. Exiba o ranking dos clientes pela quantidade de pedidos e ordene em ordem decrescente. 
+-- LINHAS = 1569.
+
+SELECT 	
+	pvc.Nome,
+	COUNT(*) AS Ranking
+FROM (SELECT
+		c.*,
+		p.CodPedido,
+		p.DataPedido,
+		p.PrazoEntrega,
+		v.CodVendedor,
+		v.FaixaComissao,
+		v.Nome AS NomeVendedor,
+		v.SalarioFixo
+	FROM pedido p
+	INNER JOIN cliente c
+		ON p.CodCliente = c.CodCliente
+	INNER JOIN vendedor v 
+		ON p.CodVendedor = v.CodVendedor) AS pvc
+GROUP BY pvc.CodCliente
+ORDER BY Ranking DESC;
+
+-- L5 EX6 Crie uma tabela temporária que contenha todos os dados das tabelas pedido, itempedido 
+-- e produto. Exiba o código do pedido e o valor total de cada pedido. LINHAS = 6507.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
