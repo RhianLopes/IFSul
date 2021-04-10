@@ -984,10 +984,240 @@ ORDER BY Ranking DESC;
 -- L5 EX6 Crie uma tabela temporária que contenha todos os dados das tabelas pedido, itempedido 
 -- e produto. Exiba o código do pedido e o valor total de cada pedido. LINHAS = 6507.
 
+SELECT 
+	p.CodPedido,
+	COALESCE(SUM(p.Quantidade * p.ValorUnitario), 0) AS Total
+FROM (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+GROUP BY p.CodPedido
+ORDER BY p.CodPedido;
 
+-- L5 EX7 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o código do vendedor, o nome do vendedor e o salário
+-- deste vendedor para o mês de abril/2016, considerando salário + comissão de 20% 
+-- sobre as vendas desse vendedor. Note que devem ser exibidos apenas os vendedores
+-- pertencentes a faixa de comissão A. LINHAS = 22
 
+SELECT
+	v.CodVendedor,
+	v.Nome,
+	COALESCE(SUM((p.Quantidade * p.ValorUnitario) * 0.2) + v.SalarioFixo, 0) AS Salario
+FROM vendedor v 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+ON v.CodVendedor = p.CodVendedor
+WHERE v.FaixaComissao = 'A'
+AND YEAR(p.DataPedido) = 2016
+AND MONTH(p.DataPedido) = 4
+GROUP BY p.CodVendedor
+ORDER BY v.CodVendedor;
 
+-- L5 EX8 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o código do cliente, o nome do cliente e o valor gasto 
+-- por ele durante o ano de 2016. Por fim, ordene a lista pelo total gasto pelo cliente 
+-- no decorrer do ano (maior -> menor). LINHAS = 621.
 
+SELECT
+	c.CodCliente,
+	c.Nome,
+	COALESCE(SUM(p.Quantidade * p.ValorUnitario), 0) AS valorGasto
+FROM cliente c 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+ON c.CodCliente = p.CodCliente
+WHERE YEAR(p.DataPedido) = 2016
+GROUP BY p.CodCliente
+ORDER BY valorGasto DESC;
+
+-- L5 EX9 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o código do produto, o seu nome e a quantidade total
+-- vendida no ano de 2015. LINHAS = 2715.
+
+SELECT 
+	p.CodProduto,
+	p.Descricao,
+	COALESCE(SUM(p.Quantidade), 0) AS Total
+FROM (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+WHERE YEAR(p.DataPedido) = 2015
+GROUP BY p.CodProduto
+ORDER BY p.CodProduto;
+
+-- L5 EX10 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o código do vendedor, o nome e o total de pedidos que 
+-- contenham itens que iniciem com ‘PS4’. LINHAS = 146.
+
+SELECT 
+	v.CodVendedor,
+	v.Nome,
+	COUNT(*) AS Total
+FROM vendedor v
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+ON v.CodVendedor = p.CodVendedor		
+WHERE p.Descricao LIKE 'PS4%'
+GROUP BY p.CodVendedor
+ORDER BY v.CodVendedor;
+
+-- L5 EX11 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o código do pedido, o código do produto e o valor total
+-- (valor total = quantidade * valor unitário) de cada produto em um pedido. Dica:
+-- deverão ser utilizados dois campos na clausula group by. LINHAS = 12339.
+
+SELECT
+	p.CodPedido,
+	p.CodProduto,
+	COALESCE(SUM(p.Quantidade * p.ValorUnitario), 0) AS Total
+FROM (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+GROUP BY p.CodPedido, p.CodProduto
+ORDER BY p.CodPedido;
+
+-- L5 EX12 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o ano, o código do cliente, o nome do cliente e o total
+-- comprado por este cliente a cada ano. Dica: deverão ser utilizados dois campos na,
+-- clausula group by. LINHAS = 3905.
+
+SELECT 
+	YEAR(p.DataPedido) AS Ano,
+	c.CodCliente,
+	c.Nome,
+	COALESCE(SUM(p.Quantidade * p.ValorUnitario), 0) AS Total
+FROM cliente c 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+ON c.CodCliente = p.CodCliente
+GROUP BY p.CodCliente, YEAR(p.DataPedido)
+ORDER BY Ano, c.CodCliente;
+
+-- L5 EX12 Crie uma tabela temporária que contenha todos os dados das tabelas pedido,
+-- itempedido e produto. Exiba o ano, o código do vendedor, o nome do vendedor e o valor
+-- total das vendas a cada ano. Dica:  deverão ser  utilizados dois campos na clausula 
+-- group by. LINHAS = 968.
+
+SELECT 
+	YEAR(p.DataPedido) AS Ano,
+	v.CodVendedor,
+	v.Nome,
+	COALESCE(SUM(p.Quantidade * p.ValorUnitario), 0) AS Total
+FROM vendedor v 
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.CodVendedor,
+		p.DataPedido,
+		p.PrazoEntrega,
+		ip.CodItemPedido,
+		ip.CodProduto,
+		ip.Quantidade,
+		pr.Descricao,
+		pr.ValorUnitario
+	FROM pedido p
+	INNER JOIN itempedido ip 
+		ON p.CodPedido = ip.CodPedido 
+	INNER JOIN produto pr 
+		ON pr.CodProduto = ip.CodProduto) AS p
+ON v.CodVendedor = p.CodVendedor
+GROUP BY p.CodVendedor, YEAR(p.DataPedido)
+ORDER BY Ano, v.CodVendedor;
 
 
 
