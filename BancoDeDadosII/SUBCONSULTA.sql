@@ -32,7 +32,7 @@ ORDER BY p.ValorUnitario DESC;
 -- L1 EX3 Mostre a quantidade de pedidos dos clientes que moram no RS ou em SC. Linhas: 1
 
 SELECT 
-	COUNT(p.CodPedido)
+	COUNT(p.CodPedido) AS Total
 FROM pedido p 
 WHERE p.CodCliente IN 
 (SELECT c.CodCliente FROM cliente c WHERE c.Uf IN ('SC', 'RS'));
@@ -154,7 +154,7 @@ SELECT
 	vp.Nome as NomeVendedor,
 	c.Uf
 FROM cliente c 
-INNER JOIN (SELECT
+JOIN (SELECT
 		p.CodCliente,
 		p.CodPedido,
 		v.Nome
@@ -312,7 +312,7 @@ GROUP BY p.CodPedido;
 
 -- L2 EX5 Anulada.
 
--- L2 EX6* Crie uma consulta que exiba o nome do cliente, o nome do vendedor de seu
+-- L2 EX6 Crie uma consulta que exiba o nome do cliente, o nome do vendedor de seu
 -- primeiro pedido e o estado do cliente. Devem ser exibidos apenas os clientes de 
 -- Santa Cataria e apenas o primeiro vendedor. Linhas: 55 
 
@@ -321,7 +321,7 @@ SELECT
 	vp.Nome as NomeVendedor,
 	c.Uf
 FROM cliente c 
-INNER JOIN (SELECT
+JOIN (SELECT
 		p.CodCliente,
 		p.CodPedido,
 		v.Nome
@@ -331,7 +331,7 @@ INNER JOIN (SELECT
 	GROUP BY p.CodPedido
 	ORDER BY p.DataPedido DESC) as vp
 ON c.CodCliente = vp.CodCliente
-WHERE c.Uf = 'SC'
+WHERE c.Uf = 'RS'
 GROUP BY c.CodCliente
 ORDER BY NomeCliente;
 
@@ -524,7 +524,7 @@ WHERE c.Uf IN ('SC', 'RS');
 
 SELECT 
 	v.Nome,
-	COALESCE(p.Total, 0)
+	COALESCE(p.Total, 0) AS Total
 FROM vendedor v 
 LEFT JOIN (SELECT 
 		p.CodVendedor,
@@ -1217,7 +1217,7 @@ INNER JOIN (SELECT
 		ON pr.CodProduto = ip.CodProduto) AS p
 ON v.CodVendedor = p.CodVendedor
 GROUP BY p.CodVendedor, YEAR(p.DataPedido)
-ORDER BY Ano, v.CodVendedor;
+ORDER BY Ano, v.CodVendedor; 
 
 
 
