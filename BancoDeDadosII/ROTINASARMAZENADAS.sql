@@ -65,9 +65,112 @@ INNER JOIN cliente c
 ON p.CodCliente = c.CodCliente;
 
 
--- L1 EX3 Retorne o número mais o nome do dia da semana (0 - Segunda) em português, como parâmetro de
--- entrada receba uma data. Para testar, crie uma consulta que retorne o número do pedido, nome do
--- cliente e dia da semana para entrega (função criada).
+-- L1 EX3 Crie uma função para retornar o gentílico dos clientes de acordo com o estado onde moram
+-- (gaúcho, catarinense ou paranaense), o parâmetro de entrada deve ser a sigla do estado. Para
+-- testar a função crie uma consulta que liste o nome do cliente e gentílico (função criada).
+
+DELIMITER $$
+CREATE FUNCTION estado(uf VARCHAR(2)) RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN 
+CASE uf
+WHEN 'RS' THEN RETURN 'Gaúcho';
+WHEN 'SC' THEN RETURN 'Catarinense';
+WHEN 'PR' THEN RETURN 'Paranaense';
+ELSE RETURN 'N/A';
+END CASE;
+END;
+DELIMITER ;
+
+SELECT 
+	c.Nome, 
+	estado(c.Uf) AS gentilico
+FROM cliente c;
+
+SELECT 
+	c.Nome, 
+	estado(c.Uf) AS gentilico
+FROM cliente c
+WHERE c.Uf IN ('RS', 'SC', 'PR');
+
+-- L1 EX4 Crie uma função que retorne a Inscrição Estadual no formato #######-##. Para testar a função
+-- criada exiba os dados do cliente com a IE formatada corretamente utilizando a função criada.
+
+DELIMITER $$
+CREATE FUNCTION ie(ie VARCHAR(10)) RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN 
+RETURN CONCAT(SUBSTRING(ie, 1, 7), '-', SUBSTRING(ie, 8, 2));
+END;
+DELIMITER ;
+
+SELECT 
+	c.Nome,
+	ie(c.Ie) AS ie
+FROM cliente c;
+	
+-- L1 EX5 Crie uma função que retorne o tipo de envio do pedido, se for até 3 dias será enviado por SEDEX,
+-- se for entre 3 e 7 dias deverá ser enviado como encomenda normal, caso seja maior que este prazo
+-- deverá ser utilizado uma encomenda não prioritária. Como dados de entrada recebe a data do
+-- pedido e o prazo de entrega e o retorno será um varchar. Note que para criar esta função você
+-- deverá utilizar a cláusula IF.
+
+DELIMITER $$
+CREATE FUNCTION delivery(dp DATE, pe DATE) RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN 
+DECLARE e VARCHAR(20); 
+IF DATEDIFF(pe, dp) < 3 THEN
+	SET e = 'SEDEX';
+ELSEIF DATEDIFF(pe, dp) >= 3 AND DATEDIFF(pe, dp) <= 7 THEN
+	SET e = 'NORMAL';
+ELSE 
+	SET e = 'NÃO PRIORITÁRIA';
+END IF;
+RETURN e;
+END;
+DELIMITER ;
+
+SELECT 
+	p.CodPedido,
+	p.DataPedido,
+	p.PrazoEntrega,
+	delivery(p.DataPedido, p.PrazoEntrega) AS tipo_envio
+FROM pedido p;
+
+-- L1 EX6 . Crie uma função que faça a comparação entre dois números inteiros. Caso os dois números sejam
+-- iguais a saída deverá ser “x é igual a y”, no qual x é o primeiro parâmetro e y o segundo parâmetro.
+-- Se x for maior, deverá ser exibido “x é maior que y”. Se x for menor, deverá ser exibido “x é menor
+-- que y”.
+
+DELIMITER $$
+CREATE FUNCTION comparexy(x INT, y INT) RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN 
+DECLARE e VARCHAR(20); 
+IF x > y THEN
+	SET e = 'x é maior que y';
+ELSEIF y > x THEN
+	SET e = 'x é menor que y';
+ELSE 
+	SET e = 'x é igual a y';
+END IF;
+RETURN e;
+END;
+DELIMITER ;
+
+SELECT comparexy(2, 1);
+-- x é maior que y
+
+SELECT comparexy(1, 2);
+-- x é menor que y
+
+SELECT comparexy(1, 1);
+-- x é menor que y
+
+
+
+
 
 
 
