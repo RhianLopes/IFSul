@@ -138,7 +138,7 @@ SELECT
 	delivery(p.DataPedido, p.PrazoEntrega) AS tipo_envio
 FROM pedido p;
 
--- L1 EX6 . Crie uma função que faça a comparação entre dois números inteiros. Caso os dois números sejam
+-- L1 EX6 Crie uma função que faça a comparação entre dois números inteiros. Caso os dois números sejam
 -- iguais a saída deverá ser “x é igual a y”, no qual x é o primeiro parâmetro e y o segundo parâmetro.
 -- Se x for maior, deverá ser exibido “x é maior que y”. Se x for menor, deverá ser exibido “x é menor
 -- que y”.
@@ -167,6 +167,100 @@ SELECT comparexy(1, 2);
 
 SELECT comparexy(1, 1);
 -- x é menor que y
+
+-- L1 EX7 Crie uma função que calcule a fórmula de bhaskara. Como parâmetro de entrada devem ser
+-- recebidos 3 valores (a, b e c). Ao final a função deve retornar “Os resultados calculados são x e y”,
+-- no qual x e y são os valores calculados.
+
+DELIMITER $$
+CREATE FUNCTION bask(a INT, b INT, c INT) RETURNS VARCHAR(200)
+DETERMINISTIC
+BEGIN 
+DECLARE x1 DOUBLE;
+DECLARE x2 DOUBLE;
+DECLARE x3 DOUBLE;
+DECLARE x4 DOUBLE;
+DECLARE x5 DOUBLE;
+DECLARE x6 DOUBLE;
+DECLARE x7 DOUBLE;
+DECLARE x DOUBLE;
+DECLARE y1 DOUBLE;
+DECLARE y2 DOUBLE;
+DECLARE y3 DOUBLE;
+DECLARE y4 DOUBLE;
+DECLARE y5 DOUBLE;
+DECLARE y6 DOUBLE;
+DECLARE y7 DOUBLE;
+DECLARE y DOUBLE;
+SET x3 = POW(b, 2); 
+SET x2 = 4 * a * c;
+SET x4 = x3 - x2;
+SET x5 = SQRT(x4); 
+SET x1 = -1 * ABS(b);
+SET x7 = 2 * a;
+SET x6 = x1 - x5; 
+SET x = x6 / x7;
+SET y3 = POW(b, 2); 
+SET y2 = 4 * a * c;
+SET y4 = y3 - y2;
+SET y5 = SQRT(y4); 
+SET y1 = -1 * ABS(b);
+SET y7 = 2 * a;
+SET y6 = y1 + y5; 
+SET y = y6 / y7;
+RETURN CONCAT("x: ", x, " y: ", y);
+END;
+DELIMITER ;
+
+SELECT bask(1, 12, -13);
+-- x: -13 y: 1
+
+-- L1 EX8 Crie uma função que retorne o valor total do salário de um vendedor (salário fixo + comissão
+-- calculada). Note que esta função deve receber 3 valores de entrada, salário fixo, faixa de comissão
+-- e o valor total vendido. Para testar essa função crie uma consulta que exiba o nome do vendedor e
+-- o salário total.
+
+DELIMITER $$
+CREATE FUNCTION salario(salario DOUBLE, faixa VARCHAR(1), total DOUBLE) RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN 
+DECLARE comissao DOUBLE;	
+CASE faixa
+WHEN 'A' THEN SET comissao = total * 0.2;
+WHEN 'B' THEN SET comissao = total * 0.15;
+WHEN 'C' THEN SET comissao = total * 0.1;
+WHEN 'D' THEN SET comissao = total * 0.05;
+END CASE;
+RETURN salario + comissao;
+END;
+DELIMITER ;
+
+SELECT salario(1000.0, 'C', 10000.0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
