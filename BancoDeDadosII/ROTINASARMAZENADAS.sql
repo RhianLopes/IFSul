@@ -221,7 +221,7 @@ SELECT bask(1, 12, -13);
 -- o salário total.
 
 DELIMITER $$
-CREATE FUNCTION salario(salario DOUBLE, faixa VARCHAR(1), total DOUBLE) RETURNS VARCHAR(20)
+CREATE FUNCTION salario(salario DOUBLE, faixa VARCHAR(1), total DOUBLE) RETURNS DOUBLE
 DETERMINISTIC
 BEGIN 
 DECLARE comissao DOUBLE;	
@@ -262,26 +262,331 @@ SELECT
 	v.FaixaComissao
 FROM vendedor v;
 
+-- L2 EX2 Crie uma função que retorne o código do produto com maior valor unitário.
+
+DELIMITER $$
+CREATE PROCEDURE produtoMaiorValor()
+BEGIN 
+SELECT p.CodProduto FROM produto p ORDER BY p.ValorUnitario DESC LIMIT 1;
+END;
+DELIMITER ;
+
+CALL produtoMaiorValor();
+
+-- L2 EX3 Crie uma função que retorne o código, a descrição e o valor do produto com maior valor unitário. Os
+-- valores devem ser retornados em uma expressão: “O produto com código XXX – XXXXXXXXX
+-- (descrição) possui o maior valor unitário R$XXXX,XX”. Crie um select que utiliza esta função
+
+DELIMITER $$
+CREATE PROCEDURE produtoCompletoMaiorValor()
+BEGIN 
+SELECT 
+	CONCAT('O produto com código ', p.CodProduto, ' - ', p.Descricao, ' possui o maior valor unitário R$ ', p.ValorUnitario) AS produto_completo_maior_valor
+FROM produto p 
+ORDER BY p.ValorUnitario DESC 
+LIMIT 1;
+END;
+DELIMITER ;
+
+CALL produtoCompletoMaiorValor();
+
+-- L2 EX4 Crie uma função que receba como parâmetros o código do produto com maior valor unitário e o
+-- código do produto com menor valor unitário. Retorne a soma dos dois.
+
+DELIMITER $$
+CREATE PROCEDURE somaMaiorEMenorValorProduto(CodMaior INT, CodMenor INT)
+BEGIN 
+SELECT 
+	SUM(p.ValorUnitario) AS soma_valor_maior_e_menor_valor_produtos
+FROM produto p 
+WHERE p.CodProduto IN (CodMaior, CodMenor);
+END;
+DELIMITER ;
+
+CALL somaMaiorEMenorValorProduto(1470, 632);
+
+-- L2 EX5 Crie uma função que retorne a média do valor unitário dos produtos. Crie uma consulta que utilize
+-- esta função.
+
+DELIMITER $$
+CREATE PROCEDURE mediaValorProdutos()
+BEGIN 
+SELECT 
+	AVG(p.ValorUnitario) AS media_valor_produtos
+FROM produto p;
+END;
+DELIMITER ;
+
+CALL mediaValorProdutos();
+
+-- L2 EX6 Faça uma função que retorna o código do cliente com a maior quantidade de pedidos um ano/mês.
+-- Observe que a função deverá receber como parâmetros um ano e um mês. Deve ser exibido a
+-- seguinte expressão: “O cliente XXXXXXX (cód) – XXXXXXX (nome) foi o cliente que fez a maior
+-- quantidade de pedidos no ano XXXX mês XX com um total de XXX pedidos”.
+
+DELIMITER $$
+CREATE PROCEDURE maiorQuantidadePedidosPorCliente(ano INT, mes INT)
+BEGIN 
+SELECT 
+ CONCAT('O cliente ', c.CodCliente, ' (cód) – ', c.Nome, ' (nome) foi o cliente que fez a maior quantidade de pedidos no ano ', ano, ' mês ', mes, ' com um total de ', p.Total, ' pedidos') AS maior_quantidade_pedidos_por_cliente 
+FROM cliente c
+INNER JOIN (SELECT
+		p.CodCliente,
+		COUNT(p.CodPedido) AS Total
+	FROM pedido p
+	WHERE YEAR(p.DataPedido) = ano
+	AND MONTH(p.DataPedido) = mes
+	GROUP BY p.CodCliente
+	ORDER BY Total DESC
+	LIMIT 1) AS p
+ON p.CodCliente = c.CodCliente;
+END;
+DELIMITER ;
+
+CALL maiorQuantidadePedidosPorCliente(2014, 4);
+
+-- L2 EX7 Faça uma função que retorna a soma dos valores dos pedidos feitos por um determinado cliente.
+-- Note que a função recebe por parâmetro o código de uma cliente e retorna o valor total dos pedidos
+-- deste cliente. Faça a consulta utilizando Joins.
+
+DELIMITER $$
+CREATE PROCEDURE somaValorPedidoPorCodCliente(codCliente INT)
+BEGIN 
+SELECT
+	SUM(ip.Quantidade * pr.ValorUnitario) AS Total
+FROM pedido p
+INNER JOIN itempedido ip
+ON p.CodPedido = ip.CodPedido
+INNER JOIN produto pr
+ON pr.CodProduto = ip.CodProduto
+WHERE p.CodCliente = codCliente;
+END;
+DELIMITER ;
+
+CALL somaValorPedidoPorCodCliente(207);
+
+-- L2 EX8 Crie 3 funções. A primeira deve retornar a soma da quantidade de produtos de todos os pedidos. A
+-- segunda, deve retornar o número total de pedidos e a terceira a média dos dois valores. Por fim,
+-- crie uma quarta função que chama as outras três e exibe todos os resultados concatenados.
+
+DELIMITER $$
+CREATE FUNCTION quantidadeProdutos() RETURNS INT
+DETERMINISTIC
+BEGIN 
+DECLARE total INT; 
+SET total = (SELECT SUM(ip.Quantidade) FROM itempedido ip);
+RETURN total;
+END;
+DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION quantidadePedidos() RETURNS INT
+DETERMINISTIC
+BEGIN 
+DECLARE total INT; 
+SET total = (SELECT COUNT(*) FROM pedido);
+RETURN total;
+END;
+DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION mediaProdutosXPedidos() RETURNS INT
+DETERMINISTIC
+BEGIN 
+DECLARE totalProduto INT;
+DECLARE totalPedido INT;
+DECLARE total INT;
+SET totalProduto = (SELECT quantidadeProdutos());
+SET totalPedido = (SELECT quantidadePedidos());
+SET total = totalProduto + totalPedido;
+RETURN total / 2;
+END;
+DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION mostrarMedias() RETURNS VARCHAR(200)
+DETERMINISTIC
+BEGIN 
+DECLARE totalProduto INT;
+DECLARE totalPedido INT;
+DECLARE total INT;
+SET totalProduto = (SELECT quantidadeProdutos());
+SET totalPedido = (SELECT quantidadePedidos());
+SET total = (SELECT mediaProdutosXPedidos());
+RETURN CONCAT('O total de produtos é ', totalProduto, ', o total de pedidos é ', totalPedido, ' e a média é ', total);
+END;
+DELIMITER ;
+
+SELECT mostrarMedias();
+
+-- L2 EX9 Crie uma função que retorna o código do vendedor com maior número de pedidos para um
+-- determinado ano/mês. Observe que a função deverá receber como parâmetros um ano e um mês.
+-- Deve ser exibido a seguinte expressão: “O vendedor XXXXXXX (cód) – XXXXXXX (nome) foi o
+-- vendedor que efetuou a maior quantidade de vendas no ano XXXX mês XX com um total de XXX
+-- pedidos”.
+
+DELIMITER $$
+CREATE PROCEDURE maiorVendasVendedorPorAnoEMes(ano INT, mes INT)
+BEGIN 
+SELECT 
+	CONCAT('O vendedor ', v.CodVendedor, ' (cód) – ', v.Nome, ' (nome) foi o vendedor que efetuou a maior quantidade de vendas no ano ', ano, ' mês ', mes, ' com um total de ', p.Total, ' pedidos') AS maior_vendas_vendedor_por_ano_e_mes
+FROM vendedor v
+INNER JOIN (SELECT
+		p.CodVendedor,
+		COUNT(*) AS Total
+	FROM pedido p 
+	WHERE YEAR(p.DataPedido) = ano
+	AND MONTH(p.DataPedido) = mes
+	GROUP BY p.CodVendedor
+	ORDER BY Total DESC
+	LIMIT 1) AS p
+ON v.CodVendedor = p.CodVendedor;
+END;
+DELIMITER ;
+
+CALL maiorVendasVendedorPorAnoEMes(2014, 4);
+
+-- L2 EX10 Crie uma função que retorne o nome e o endereço completo do cliente que fez o último
+-- pedido na loja. (Pedido com a data mais recente).
+
+DELIMITER $$
+CREATE PROCEDURE nomeEEnderecoUltimoCliente()
+BEGIN 
+SELECT 
+	CONCAT(c.Nome, ' - ', c.Endereco) AS nome_endereco_ultimo_cliente
+FROM cliente c
+WHERE c.CodCliente = (SELECT
+		p.CodCliente
+	FROM pedido p
+	ORDER BY p.DataPedido DESC
+	LIMIT 1);
+END;
+DELIMITER ;
+
+CALL nomeEEnderecoUltimoCliente();
+
+-- L2 EX11 Crie uma função que retorne a quantidade de pedidos realizados para clientes do Estado informado
+-- (receber o estado como parâmetro).
+
+DELIMITER $$
+CREATE PROCEDURE totalPedidosPorEstado(uf VARCHAR(2))
+BEGIN 
+SELECT
+	COUNT(*) AS total_pedidos_por_estado
+FROM pedido p
+INNER JOIN cliente c
+ON p.CodCliente = c.CodCliente
+WHERE c.Uf = 'RS';
+END;
+DELIMITER ;
+
+CALL totalPedidosPorEstado('RS');
+
+-- L2 EX12 Crie uma função que retorne o valor total que é gasto com os salários dos vendedores de certa faixa
+-- de comissão. (Receber a faixa de comissão por parâmetro). Note que deve ser considerado o valor
+-- total dos salários, incluindo a comissão.
+
+DELIMITER $$
+CREATE FUNCTION calcularComissaoPorFaixa(salario DOUBLE, faixa VARCHAR(1), total DOUBLE) RETURNS DOUBLE
+DETERMINISTIC
+BEGIN 
+DECLARE comissao DOUBLE;	
+CASE faixa
+WHEN 'A' THEN SET comissao = total * 0.2;
+WHEN 'B' THEN SET comissao = total * 0.15;
+WHEN 'C' THEN SET comissao = total * 0.1;
+WHEN 'D' THEN SET comissao = total * 0.05;
+END CASE;
+RETURN salario + comissao;
+END;
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE totalGastoComSalarios(faixa VARCHAR(1))
+BEGIN 
+SELECT
+	SUM(calcularComissaoPorFaixa(v.SalarioFixo, v.FaixaComissao, p.Total)) AS total_gasto_com_salarios
+FROM vendedor v
+INNER JOIN (SELECT
+		p.CodVendedor,
+		SUM(ip.Quantidade * pr.ValorUnitario) AS Total
+	FROM pedido p
+	INNER JOIN itempedido ip
+	ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr
+	ON pr.CodProduto = ip.CodProduto
+	GROUP BY p.CodVendedor) AS p
+ON v.CodVendedor = p.CodVendedor
+WHERE v.FaixaComissao = faixa;
+END;
+DELIMITER ;
+
+CALL totalGastoComSalarios('A');
+
+-- L2 EX13 Crie uma função que mostre o cliente que fez o pedido mais caro da loja. O retorno da função
+-- deverá ser: “O cliente XXXXXX efetuou o pedido XXXX (cód) em XXXX (data), o qual é o mais caro
+-- registrado até o momento no valor total de R$XXXX,XX”.
+
+DELIMITER $$
+CREATE PROCEDURE maiorPedidoEfetuadoPorCliente()
+BEGIN 
+SELECT 
+ CONCAT('O cliente ', c.Nome, ' efetuou o pedido ', p.CodPedido, ' (cód) em ', p.DataPedido, ' (data), o qual é o mais caro registrado até o momento no valor total de R$ ', p.Total) AS maior_pedido_efetuado_por_cliente
+FROM cliente c
+INNER JOIN (SELECT
+		p.CodCliente,
+		p.CodPedido,
+		p.DataPedido,
+		SUM(ip.Quantidade * pr.ValorUnitario) AS Total
+	FROM pedido p
+	INNER JOIN itempedido ip
+	ON p.CodPedido = ip.CodPedido
+	INNER JOIN produto pr
+	ON pr.CodProduto = ip.CodProduto
+	GROUP BY p.CodPedido
+	ORDER BY Total DESC
+	LIMIT 1) AS p
+ON p.CodCliente = c.CodCliente;
+END;
+DELIMITER ;
+
+CALL maiorPedidoEfetuadoPorCliente();
 
 
+-- L2 EX14 Crie uma função que mostre o valor total arrecadado com apenas um determinado produto em toda
+-- a história da loja. Esta função deverá receber como parâmetro o código do produto e retornar a
+-- seguinte expressão: “O valor total arrecadado com o produto XXXXXX (descrição) foi de
+-- R$XXXX,XX”.
 
+DELIMITER $$
+CREATE PROCEDURE valorArrecadadoPorProduto(CodProduto INT) 
+BEGIN 
+SELECT
+	SUM(pr.ValorUnitario * ip.Quantidade) AS valor_arrecadado_por_produto
+FROM produto pr
+INNER JOIN itempedido ip 
+ON ip.CodProduto = pr.CodProduto
+WHERE ip.CodProduto = CodProduto;
+END;
+DELIMITER ;
 
+CALL valorArrecadadoPorProduto(25);
 
+-- L2 EX15 Crie uma função que mostre a quantidade total vendida para um determinado produto. A função
+-- deverá receber como parâmetro o código do produto e retornar a quantidade total de itens que
+-- foram vendidos para este produto.
 
+DELIMITER $$
+CREATE PROCEDURE quantidadeVendidaPorProduto(CodProduto INT) 
+BEGIN 
+SELECT
+	SUM(ip.Quantidade) AS quantidade_vendida_por_produto
+FROM itempedido ip
+WHERE ip.CodProduto = CodProduto;
+END;
+DELIMITER ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+CALL quantidadeVendidaPorProduto(25);
 
 
 
