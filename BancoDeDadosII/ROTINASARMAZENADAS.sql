@@ -237,7 +237,30 @@ DELIMITER ;
 
 SELECT salario(1000.0, 'C', 10000.0);
 
+-- L2 EX1 Crie uma função para calcular um aumento de 10% no salário dos vendedores de faixa de comissão
+-- 'A’. Considere o valor do salário fixo para calcular este aumento. Faça uma consulta select
+-- utilizando essa função.
 
+DELIMITER $$
+CREATE FUNCTION salario10A(salario DOUBLE, faixa VARCHAR(1)) RETURNS DOUBLE
+DETERMINISTIC
+BEGIN 
+DECLARE sal DOUBLE; 
+IF faixa = 'A' THEN
+	SET sal = salario * 1.1;
+ELSE 
+	SET sal = salario;
+END IF;
+RETURN sal;
+END;
+DELIMITER ;
+
+SELECT 
+	v.Nome,
+	v.SalarioFixo,
+	salario10A(v.SalarioFixo, v.FaixaComissao) AS SalarioComComissao,
+	v.FaixaComissao
+FROM vendedor v;
 
 
 
