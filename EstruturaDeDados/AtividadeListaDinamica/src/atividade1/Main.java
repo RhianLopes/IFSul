@@ -2,6 +2,8 @@ package atividade1;
 
 import atividade1.domain.Student;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -11,30 +13,25 @@ public class Main {
     public static void main(String[] args) {
         final Scanner scanner = new Scanner(System.in);
 
-        final Student[] students = new Student[MAX_OF_STUDENTS];
+        final List<Student> students = new ArrayList<>();
+        int count = 0;
         boolean shouldContinue = true;
 
         System.out.println("Save name and note of the students");
-        for (int i = 0; i < MAX_OF_STUDENTS; i++) {
-            if (shouldContinue) {
-                System.out.println(String.format("Write the student %d name, please: ", i + 1));
-                final String name = scanner.next();
-                System.out.println(String.format("Write the student %d note, please: ", i + 1));
-                final int note = scanner.nextInt();
-
-                if (note < 0) {
-                    shouldContinue = false;
-                } else {
-                    students[i] = new Student(name, note);
-                }
+        while (shouldContinue) {
+            System.out.println("Write the student name, please: ");
+            final String name = scanner.next();
+            System.out.println("Write the student note, please: ");
+            final int note = scanner.nextInt();
+            count++;
+            if (MAX_OF_STUDENTS.equals(count) || note < 0) {
+                shouldContinue = false;
+            } else {
+                students.add(new Student(name, note));
             }
         }
 
         System.out.println("View below your students: ");
-        for (int i = 0; i < MAX_OF_STUDENTS; i++) {
-            if (students[i] != null) {
-                System.out.println(students[i].toString());
-            }
-        }
+        students.forEach(s -> System.out.println(s.toString()));
     }
 }
