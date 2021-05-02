@@ -476,7 +476,7 @@ SELECT
 FROM pedido p
 INNER JOIN cliente c
 ON p.CodCliente = c.CodCliente
-WHERE c.Uf = 'RS';
+WHERE c.Uf = uf;
 END;
 DELIMITER ;
 
