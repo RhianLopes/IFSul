@@ -36,4 +36,54 @@ public class Pedido {
     @JoinColumn(name = "codvendedor")
     private Vendedor vendedor;
 
+    public Pedido(Integer codPedido, LocalDate prazoEntrega, LocalDate dataPedido, Cliente cliente, Vendedor vendedor) {
+        this.codPedido = codPedido;
+        this.prazoEntrega = prazoEntrega;
+        this.dataPedido = dataPedido;
+        this.cliente = cliente;
+        this.vendedor = vendedor;
+    }
+
+    public Pedido() {
+    }
+
+    public Integer getCodPedido() {
+        return codPedido;
+    }
+
+    public void setCodPedido(Integer codPedido) {
+        this.codPedido = codPedido;
+    }
+
+    public LocalDate getPrazoEntrega() {
+        return prazoEntrega;
+    }
+
+    public void setPrazoEntrega(LocalDate prazoEntrega) {
+        this.prazoEntrega = prazoEntrega;
+    }
+
+    public LocalDate getDataPedido() {
+        return dataPedido;
+    }
+
+    public void setDataPedido(LocalDate dataPedido) {
+        this.dataPedido = dataPedido;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Vendedor getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Vendedor vendedor) {
+        this.vendedor = vendedor;
+    }
 }

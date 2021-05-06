@@ -33,4 +33,45 @@ public class Vendedor {
     @Column(name = "faixacomissao", columnDefinition="enum('A', 'B', 'C', 'D')")
     private FaixaComissao faixaComissao;
 
+    public Vendedor(Integer codVendedor, String nome, BigDecimal salarioFixo, FaixaComissao faixaComissao) {
+        this.codVendedor = codVendedor;
+        this.nome = nome;
+        this.salarioFixo = salarioFixo;
+        this.faixaComissao = faixaComissao;
+    }
+
+    public Vendedor() {
+    }
+
+    public Integer getCodVendedor() {
+        return codVendedor;
+    }
+
+    public void setCodVendedor(Integer codVendedor) {
+        this.codVendedor = codVendedor;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public BigDecimal getSalarioFixo() {
+        return salarioFixo;
+    }
+
+    public void setSalarioFixo(BigDecimal salarioFixo) {
+        this.salarioFixo = salarioFixo;
+    }
+
+    public FaixaComissao getFaixaComissao() {
+        return faixaComissao;
+    }
+
+    public void setFaixaComissao(FaixaComissao faixaComissao) {
+        this.faixaComissao = faixaComissao;
+    }
 }

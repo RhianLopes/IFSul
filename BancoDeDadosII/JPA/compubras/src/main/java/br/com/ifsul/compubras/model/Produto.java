@@ -28,4 +28,36 @@ public class Produto {
     @Column(name = "valorunitario")
     private BigDecimal valorUnitario;
 
+    public Produto(Integer codProduto, String descricao, BigDecimal valorUnitario) {
+        this.codProduto = codProduto;
+        this.descricao = descricao;
+        this.valorUnitario = valorUnitario;
+    }
+
+    public Produto() {
+    }
+
+    public Integer getCodProduto() {
+        return codProduto;
+    }
+
+    public void setCodProduto(Integer codProduto) {
+        this.codProduto = codProduto;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public BigDecimal getValorUnitario() {
+        return valorUnitario;
+    }
+
+    public void setValorUnitario(BigDecimal valorUnitario) {
+        this.valorUnitario = valorUnitario;
+    }
 }
