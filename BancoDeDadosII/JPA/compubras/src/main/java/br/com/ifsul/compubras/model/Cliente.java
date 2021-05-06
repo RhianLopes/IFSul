@@ -22,7 +22,7 @@ public class Cliente {
     private String nome;
 
     @Basic(optional = false)
-    @Column(name = "Endereco")
+    @Column(name = "Enderecoaa")
     private String endereco;
 
     @Basic(optional = false)
