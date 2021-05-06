@@ -8,41 +8,41 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table
+@Table(name = "cliente")
 @Entity
 public class Cliente {
 
     @Id
-    @Column(name = "CodCliente")
+    @Column(name = "codcliente")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer codCliente;
 
     @Basic(optional = false)
-    @Column(name = "Nome")
+    @Column(name = "nome")
     private String nome;
 
     @Basic(optional = false)
-    @Column(name = "Enderecoaa")
+    @Column(name = "endereco")
     private String endereco;
 
     @Basic(optional = false)
-    @Column(name = "Cidade")
+    @Column(name = "cidade")
     private String cidade;
 
     @Basic(optional = false)
-    @Column(name = "Cep")
+    @Column(name = "cep")
     private String cep;
 
     @Basic(optional = false)
-    @Column(name = "Uf")
-    private String uf;
+    @Column(name = "uf")
+    private Character uf;
 
     @Basic(optional = false)
-    @Column(name = "Ie")
+    @Column(name = "ie")
     private String ie;
 
-    public Cliente(Long id, String nome, String endereco, String cidade, String cep, String uf, String ie) {
-        this.id = id;
+    public Cliente(Integer codCliente, String nome, String endereco, String cidade, String cep, Character uf, String ie) {
+        this.codCliente = codCliente;
         this.nome = nome;
         this.endereco = endereco;
         this.cidade = cidade;
@@ -54,12 +54,12 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Long getId() {
-        return id;
+    public Integer getCodCliente() {
+        return codCliente;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCodCliente(Integer codCliente) {
+        this.codCliente = codCliente;
     }
 
     public String getNome() {
@@ -94,11 +94,11 @@ public class Cliente {
         this.cep = cep;
     }
 
-    public String getUf() {
+    public Character getUf() {
         return uf;
     }
 
-    public void setUf(String uf) {
+    public void setUf(Character uf) {
         this.uf = uf;
     }
 
