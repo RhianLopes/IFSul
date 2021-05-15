@@ -1,0 +1,20 @@
+package trabalho.model;
+
+public enum EspecialidadeMedica {
+
+    CARDIOLOGIA,
+    DERMATOLOGIA,
+    GINECOLOGIA,
+    ORTOPEDIA,
+    ANESTESIOLOGIA,
+    PEDIATRIA,
+    OFTALMOLOGIA,
+    PSIQUIATRIA,
+    UROLOGIA,
+    ONCOLOGIA,
+    ENDOCRINOLOGIA,
+    NEUROLOGIA,
+    HEMATOLOGIA,
+    CIRURGIA_PLASTICA
+
+}

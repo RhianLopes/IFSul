@@ -9,6 +9,7 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class CompubrasApplication {
 
+	// Resoluções do exercício JPQL em ExercicioServiceImpl
 	public static void main(String[] args) {
 		SpringApplication.run(CompubrasApplication.class, args);
 	}
