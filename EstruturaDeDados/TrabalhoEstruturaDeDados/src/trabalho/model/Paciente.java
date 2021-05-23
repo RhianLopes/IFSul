@@ -48,4 +48,13 @@ public class Paciente {
     public void setEspecialidadeMedica(EspecialidadeMedica especialidadeMedica) {
         this.especialidadeMedica = especialidadeMedica;
     }
+
+    @Override
+    public String toString() {
+        return "Paciente{" +
+                " nome='" + nome + '\'' +
+                ", idade=" + idade +
+                ", especialidadeMedica=" + especialidadeMedica +
+                '}';
+    }
 }

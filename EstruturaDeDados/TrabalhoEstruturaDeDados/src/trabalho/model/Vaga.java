@@ -26,4 +26,12 @@ public class Vaga {
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
     }
+
+    @Override
+    public String toString() {
+        return "Vaga{" +
+                "posicao=" + posicao +
+                ", paciente=" + paciente +
+                '}';
+    }
 }
