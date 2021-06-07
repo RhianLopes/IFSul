@@ -28,6 +28,9 @@ public class Main {
         System.out.println("2. Adicionando galho x no lado esquerdo do galho b");
         System.out.println("Quantidade de nós: " + Arvore.quantidadeDeNos(raiz));
         System.out.println("Altura da árvore: " + Arvore.altura(raiz));
+        System.out.println("x pertence a árvore? " + Arvore.pertence(raiz, 'x'));
+        System.out.println("y pertence a árvore? " + Arvore.pertence(raiz, 'y'));
+        System.out.println("z pertence a árvore? " + Arvore.pertence(raiz, 'z'));
         Arvore.imprimir(raiz);
 
         // Removendo árvore e no galho c
@@ -36,6 +39,7 @@ public class Main {
         System.out.println("3. Removendo árvore e no galho c");
         System.out.println("Quantidade de nós: " + Arvore.quantidadeDeNos(raiz));
         System.out.println("Altura da árvore: " + Arvore.altura(raiz));
+        System.out.println("c ainda pertence a árvore? " + Arvore.pertence(raiz, 'e'));
         Arvore.imprimir(raiz);
     }
 }

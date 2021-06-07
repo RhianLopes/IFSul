@@ -1,0 +1,10 @@
+
+a
+java:S2259c"?A "NullPointerException" could be thrown; "r" is nullable here.(ôÜ—¼ÿÿÿÿÿ8ìôª–ž/
+a
+java:S2259^"?A "NullPointerException" could be thrown; "r" is nullable here.(€®åšøÿÿÿÿ8¦†ÿ•ž/
+Z	java:S106"9Replace this use of System.out or System.err by a logger.(èî¶òüÿÿÿÿ8ø±›“ž/
+K
+java:S1128".Remove this unused import 'java.util.Objects'.(¼¸õ›8€«˜“ž/
+X	java:S125_"<This block of commented-out lines of code should be removed.(ƒè£8ŒØË–ž/
+]	java:S125d"<This block of commented-out lines of code should be removed.(ã°øÿÿÿÿ8€ªÌ–ž/
