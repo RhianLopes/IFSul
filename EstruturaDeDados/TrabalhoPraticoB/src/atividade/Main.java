@@ -31,21 +31,6 @@ public class Main {
                     System.out.println("Não foi possível encontrar esta opção, tente novamente");
             }
         }
-
-//        grafo.adicionarVertice("Thor"); Rhian
-//        grafo.adicionarVertice("Capitão América"); Eduarda
-//        grafo.adicionarVertice("Viúva Negra"); Marta
-//        grafo.adicionarVertice("Hulk"); Fernando
-//        grafo.adicionarVertice("Homem de Ferro"); Ronaldo
-//
-//        grafo.adicionarAresta(2.0, "Thor", "Capitão América");
-//        grafo.adicionarAresta(2.0, "Capitão América", "Hulk");
-//        grafo.adicionarAresta(2.0, "Hulk", "Viúva Negra");
-//        grafo.adicionarAresta(2.0, "Thor", "Viúva Negra");
-//        grafo.adicionarAresta(2.0, "Homem de Ferro", "Capitão América");
-//        grafo.adicionarAresta(2.0, "Homem de Ferro", "Thor");
-//
-//        grafo.buscaEmLargura();
     }
 
     public static void novaEstacao() {
