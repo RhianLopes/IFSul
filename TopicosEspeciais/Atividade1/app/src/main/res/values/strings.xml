@@ -18,4 +18,5 @@
     <string name="str_validation_min_max_size_phone">O telefone deve possuir 13 caracteres</string>
     <string name="str_validation_min_max_size_birth_date">A data de nascimento deve possuir 10 caracteres</string>
     <string name="str_validation_genre_selected">Selecione o seu gênero</string>
+    <string name="btn_text_edit">Editar</string>
 </resources>

@@ -2,6 +2,7 @@ package br.com.example.atividade1.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,10 +31,9 @@ import br.com.example.atividade1.R;
 import br.com.example.atividade1.enumeration.Genre;
 import br.com.example.atividade1.enumeration.Interest;
 import br.com.example.atividade1.model.User;
+import br.com.example.atividade1.repository.UserRepository;
 
 public class SaveActivity extends AppCompatActivity implements Validator.ValidationListener {
-
-    private final static List<User> USERS = new ArrayList<>();
 
     @NotEmpty(messageResId = R.string.str_validation_not_empty_message)
     @Length(min = 3, max = 20, messageResId = R.string.str_validation_min_max_size_name)
@@ -72,6 +72,8 @@ public class SaveActivity extends AppCompatActivity implements Validator.Validat
 
     private Button btSave;
 
+    private Button btSend;
+
     private Validator validator;
 
     @Override
@@ -85,12 +87,19 @@ public class SaveActivity extends AppCompatActivity implements Validator.Validat
                 validator.validate();
             }
         });
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SaveActivity.this, ListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onValidationSucceeded() {
         Toast.makeText(this, "Cadastrado com Sucesso!", Toast.LENGTH_SHORT).show();
-        USERS.add(buildNewUser());
+        UserRepository.add(buildNewUser());
         clearComponents();
     }
 
@@ -130,23 +139,13 @@ public class SaveActivity extends AppCompatActivity implements Validator.Validat
                 .build();
     }
 
-    private List<Interest> getInterests() {
-        final List<Interest> interests = new ArrayList<>();
-        if (cbMovie.isChecked()) {
-            interests.add(Interest.MOVIE);
-        }
-        if (cbMusic.isChecked()) {
-            interests.add(Interest.MUSIC);
-        }
-        return interests;
-    }
-
     private void initComponents() {
         etName = findViewById(R.id.et_name);
         etEmail = findViewById(R.id.et_email);
         etPhone = findViewById(R.id.et_phone);
         etBirthDate = findViewById(R.id.et_birth_date);
         btSave = findViewById(R.id.bt_save);
+        btSend = findViewById(R.id.bt_send);
         rgGenre = findViewById(R.id.rg_genre);
         rbMale = findViewById(R.id.rb_male);
         rbFemale = findViewById(R.id.rb_female);
@@ -172,6 +171,17 @@ public class SaveActivity extends AppCompatActivity implements Validator.Validat
         mf.registerPattern(mp09);
         MaskTextWatcher mtw2 = new MaskTextWatcher(etBirthDate, mf);
         etBirthDate.addTextChangedListener(mtw2);
+    }
+
+    private List<Interest> getInterests() {
+        final List<Interest> interests = new ArrayList<>();
+        if (cbMovie.isChecked()) {
+            interests.add(Interest.MOVIE);
+        }
+        if (cbMusic.isChecked()) {
+            interests.add(Interest.MUSIC);
+        }
+        return interests;
     }
 
     private void clearComponents() {

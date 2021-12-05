@@ -27,4 +27,8 @@ public class User {
 
     private List<Interest> interests;
 
+    @Override
+    public String toString() {
+        return name.concat(":").concat(genre.getValue());
+    }
 }
