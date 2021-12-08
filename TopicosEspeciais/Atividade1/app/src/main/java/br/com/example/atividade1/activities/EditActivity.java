@@ -89,8 +89,6 @@ public class EditActivity extends AppCompatActivity implements Validator.Validat
             @Override
             public void onClick(View view) {
                 validator.validate();
-                Intent intent = new Intent(EditActivity.this, ListActivity.class);
-                startActivity(intent);
             }
         });
     }
@@ -157,6 +155,8 @@ public class EditActivity extends AppCompatActivity implements Validator.Validat
     public void onValidationSucceeded() {
         Toast.makeText(this, "Editado com Sucesso!", Toast.LENGTH_SHORT).show();
         UserRepository.add(position, buildNewUser());
+        Intent intent = new Intent(EditActivity.this, ListActivity.class);
+        startActivity(intent);
     }
 
     private User buildNewUser() {

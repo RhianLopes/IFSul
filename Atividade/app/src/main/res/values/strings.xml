@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Atividade1</string>
+    <string name="hint_name">Nome</string>
+    <string name="hint_email">E-Mail</string>
+    <string name="hint_phone">Telefone</string>
+    <string name="hint_birth_date">Data de Nascimento</string>
+    <string name="text_genre">Gênero:</string>
+    <string name="text_male">Masculino</string>
+    <string name="text_female">Feminino</string>
+    <string name="text_interests">Interesses:</string>
+    <string name="text_music">Música</string>
+    <string name="text_movie">Filme</string>
+    <string name="btn_text_save">Cadastrar</string>
+    <string name="btn_text_send">Enviar</string>
+    <string name="str_validation_not_empty_message">Campo obrigatório</string>
+    <string name="str_validation_min_max_size_name">O nome deve possuir entre 3 e 20 caracteres</string>
+    <string name="str_validation_email">Deve ser um e-mail válido</string>
+    <string name="str_validation_min_max_size_phone">O telefone deve possuir 13 caracteres</string>
+    <string name="str_validation_min_max_size_birth_date">A data de nascimento deve possuir 10 caracteres</string>
+    <string name="str_validation_genre_selected">Selecione o seu gênero</string>
+    <string name="btn_text_edit">Editar</string>
+</resources>

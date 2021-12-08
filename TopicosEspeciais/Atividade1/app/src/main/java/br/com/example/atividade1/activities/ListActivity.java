@@ -31,32 +31,28 @@ import br.com.example.atividade1.R;
 import br.com.example.atividade1.model.User;
 import br.com.example.atividade1.repository.UserRepository;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends android.app.ListActivity {
 
     private ArrayAdapter<User> arrayAdapter;
-
-    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_screen);
         initComponents();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ListActivity.this, EditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("position", position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
     }
 
     private void initComponents() {
-        listView = findViewById(R.id.list_view);
         arrayAdapter = new ArrayAdapter<>(ListActivity.this, android.R.layout.simple_list_item_1, UserRepository.findAll());
-        listView.setAdapter(arrayAdapter);
+        super.setListAdapter(arrayAdapter);
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Intent intent = new Intent(ListActivity.this, EditActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
